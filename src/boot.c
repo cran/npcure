@@ -69,7 +69,7 @@ SEXP probcurenp0hboot(SEXP Datat,
 	ptbootpre[i] = pdatat[index - 1];
 	deltaboot[i] = pdatadelta[index - 1];
       } // end of 3. for (in i)
-      R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+      R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
       for (i = 0; i < nrow; i++) {
 	ptboot[i] = ptbootpre[torder[i]];
 	pxboot[i] = pdatax[torder[i]];
@@ -80,6 +80,7 @@ SEXP probcurenp0hboot(SEXP Datat,
 	mseterm = REAL(probcureboot)[conth] - pilotterm;
 	mse[conth] += mseterm*mseterm;
       }
+      UNPROTECT(1);
     } // end of 2. for (in contb)
     auxmsemin = mse[0];
     indexmsemin = 0;
@@ -191,12 +192,12 @@ SEXP latencynp0hboot(SEXP Datat,
   for (i = 0; i < nrow; i++)
     ponemdatadelta[i] = 1 - pdatadelta[i];
   GetRNGstate();
-  for (contx = 0; contx < lx; contx++) {
+  for (contx = 0; contx < lx; contx++) { // 1. for
     memset(miseh, 0.0, lh*sizeof(double));
     REAL(x0)[0] = px[contx];
     platencypilot = REAL(VECTOR_ELT(Latencypilot, contx));
-    for (contb = 0; contb < b; contb++) {
-      for (i = 0; i < nrow; i++) {
+    for (contb = 0; contb < b; contb++) { // 2. for
+      for (i = 0; i < nrow; i++) { // 3. for
 	unif = runif(0, sumprobi0);
 	cumprobi0 = 0; 
 	index0 = 0; 
@@ -236,8 +237,8 @@ SEXP latencynp0hboot(SEXP Datat,
 	  ptbootpre[i] = fmin(yboot[i], cboot[i]);
 	  deltaboot[i] = (yboot[i] <= cboot[i]) ? 1 : 0;
 	}
-      }
-      R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+      } // end of 3. for (in i)
+      R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
       for (i = 0; i < nrow; i++) {
 	pxboot[i] = pdatax[torder[i]];
 	ptboot[i] = ptbootpre[torder[i]];
@@ -247,8 +248,9 @@ SEXP latencynp0hboot(SEXP Datat,
       for (conth = 0; conth < lh; conth++) {
 	platencyboot = REAL(VECTOR_ELT(latencyboot, conth));
 	miseh[conth] += ise(platencyboot, platencypilot, pdatat, nrow, tmax);
-	}
-    }
+      }
+      UNPROTECT(1);
+    } // end of 2. for (in contb)
     auxmisemin = miseh[0];
     indexmisemin = 0;
     for (conth = 1; conth < lh; conth++) {
@@ -258,7 +260,7 @@ SEXP latencynp0hboot(SEXP Datat,
       }
     }
     phboot[contx] = ph[indexmisemin];
-  }
+  } // end of 1. for (in contx)
   PutRNGstate(); 
   free(cboot);
   free(yboot);

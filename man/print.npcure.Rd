@@ -2,11 +2,15 @@
 
 \alias{print.npcure}
 
-\title{Print Method pof Objects of Class 'npcure'}
+\title{Print Method for Objects of Class 'npcure'
+}
 
-\description{This function implements a print method for 'npcure' objects.}
+\description{This function implements a print method for 'npcure'
+  objects.
+} 
 
-\usage{\method{print}{npcure}(x, how, \dots)}
+\usage{\method{print}{npcure}(x, how, head = FALSE, \dots)
+}
 
 \arguments{
   \item{x}{An object of class 'npcure'.
@@ -14,8 +18,14 @@
   \item{how}{A character string with values "wide" or "long". If
     missing, the function itself chooses a convenient default.
   }
-  \item{\dots}{Further optional arguments for the default method
-    (i.e. \code{print.default}) of the \code{print} generic function.
+  \item{head}{A logical value that controls whether the function's
+    output must be abbreviated (\code{TRUE}) or not (\code{FALSE},
+    the default). 
+  }
+  \item{\dots}{Further optional arguments. Excepting for \code{n}, which
+  controls how many lines are printed when \code{head = TRUE}, these are
+  the arguments for the default method (i.e., \code{print.default}) of
+  the \code{print} generic function.
   }
 }
     
@@ -51,8 +61,9 @@ S1
 print(S1, how = "wide")
 print(S1, how = "long")
 
-## How to control the number of significant digits of the output
-print(S1, digits = 5)
+## How to control the number of significant digits of the output, and
+## how to abbreviate the output 
+print(S1, digits = 5, head = TRUE, n = 4)
 
 ## Calling 'print()' with a 'npcure' object created by 'probcure()'
 q1 <- probcure(x, t, d, data, x0 = c(0, .5), h = c(.5, 1, 1.5), local =

@@ -2,28 +2,27 @@
 
 \alias{latencyhboot}
 
-\title{Compute the Bootstrap Bandwidth for the NP Estimator of the
-  Latency
+\title{Compute the Bootstrap Bandwidth for the Nonparametric Estimator
+  of the Latency
 }
 
 \description{This function computes the bootstrap bandwidth for the
   nonparametric estimator of the conditional latency function.
 }
 
-\usage{latencyhboot(x, t, d, dataset, x0, bootpars =
-npcure::controlpars())
+\usage{latencyhboot(x, t, d, dataset, x0, bootpars = controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
-    covariate values. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the covariate in the data
-    frame.
+    covariate values. If \code{dataset} is a data frame, it is
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     observed times. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the observed times in the
-    data frame.
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -84,7 +83,7 @@ npcure::controlpars())
 }
 
 \references{Li, G., Datta, S. (2001). A bootstrap approach to
-  nonparametric regression for right censored data.  Annals of the
+  nonparametric regression for right censored data. Annals of the
   Institute of Statistical Mathematics, 53:
   708–729. \url{https://doi.org/10.1023/A:1014644700806}.
   
@@ -139,13 +138,13 @@ S2 <- latency(x, t, d, data, x0 = 0, h = hb2$h[hb2$x0 == 0])
 
 ## A plot comparing the estimates with bootstrap bandwidths obtained
 ## with default and non-default 'bootpars'
-plot(S1$testim, S1$S$x0, type = "S", xlab = "Time", ylab = "Latency",
+plot(S1$testim, S1$S$x0, type = "s", xlab = "Time", ylab = "Latency",
 ylim = c(0, 1))
-lines(S2$testim, S2$S$x0, type = "S", lty = 2)
+lines(S2$testim, S2$S$x0, type = "s", lty = 2)
 lines(S1$testim, pweibull(S1$testim, shape = .5*(0 + 4), lower.tail =
-FALSE), lwd = 2)
+FALSE), col = 2)
 legend("topright", c("Estimate with 'hb1'", "Estimate with 'hb2'",
-"True"), lty = c(1, 2, 1), lwd = c(1, 1, 2))
+"True"), lty = c(1, 2, 1), col = c(1, 1, 2))
 
 ## Example with the dataset 'bmt' of the 'KMsurv' package
 ## to study the survival of the uncured patients aged 25 and 40
@@ -155,15 +154,16 @@ hb <- latencyhboot(z1, t2, d3, bmt, x0 = x0, bootpars = controlpars(B =
 1999, hbound = c(.2, 4), hl = 150, hsave = TRUE))
 S0 <- latency(z1, t2, d3, bmt, x0 = x0, hb$h, conflevel = .95)
 ## Plot of predicted latency curves and confidence bands
-plot(S0$testim, S0$S$x25, type = "S", xlab = "Time", ylab = "Survival",
-ylim = c(0,1))
-lines(S0$testim, S0$conf$x25$lower, type = "S", lty = 2)
-lines(S0$testim, S0$conf$x25$upper, type = "S", lty = 2)
-lines(S0$testim, S0$S$x40, type = "S", lty = 1, lwd = 2)
-lines(S0$testim, S0$conf$x40$lower, type = "S", lty = 2, lwd = 2)
-lines(S0$testim, S0$conf$x40$upper, type = "S", lty = 2, lwd = 2)
-legend("topright", c("25 years", "95\% CI limits", "40 years",
-"95\% CI limits"), lty = c(1, 2, 1, 2), lwd = c(1, 1, 2, 2)) 
+plot(S0$testim, S0$S$x25, type = "s", xlab = "Time (days)",
+ylab = "Survival", ylim = c(0,1))
+lines(S0$testim, S0$conf$x25$lower, type = "s", lty = 2)
+lines(S0$testim, S0$conf$x25$upper, type = "s", lty = 2)
+lines(S0$testim, S0$S$x40, type = "s", lty = 1, col = 2)
+lines(S0$testim, S0$conf$x40$lower, type = "s", lty = 2, col = 2)
+lines(S0$testim, S0$conf$x40$upper, type = "s", lty = 2, col = 2)
+legend("topright", c("Age 25: Estimate", "Age 25: 95\% CI limits",
+"Age 40: Estimate", "Age 40: 95\% CI limits"), lty = 1:2,
+col = c(1, 1, 2, 2)) 
 }
 }
 

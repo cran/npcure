@@ -7,7 +7,7 @@ probcure <- function(x,
                      h,
                      local = TRUE,
                      conflevel = 0L,
-                     bootpars = if (conflevel == 0 && !missing(h)) NULL else npcure::controlpars()) {
+                     bootpars = if (conflevel == 0 && !missing(h)) NULL else controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))
@@ -26,9 +26,9 @@ probcure <- function(x,
         sm <- bootpars$hsmooth
         h <-
             if (sm > 1)
-                npcure::probcurehboot(x, t, d, dfr, x0, bootpars)$hsmooth
+                probcurehboot(x, t, d, dfr, x0, bootpars)$hsmooth
             else
-                npcure::probcurehboot(x, t, d, dfr, x0, bootpars)$h
+                probcurehboot(x, t, d, dfr, x0, bootpars)$h
     }
     else {
         if (local) {
@@ -61,7 +61,7 @@ probcure <- function(x,
         B <- bootpars$B
         fpilot <- bootpars$fpilot
         if (is.null(fpilot)) {
-            pilot <- npcure::hpilot(dfr$x, x0, bootpars$nnfrac)
+            pilot <- hpilot(dfr$x, x0, bootpars$nnfrac)
         }
         else
             pilot <- do.call(fpilot, c(list(x0 = x0), bootpars$dots))

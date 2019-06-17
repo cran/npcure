@@ -2,7 +2,7 @@
 
 \alias{probcurehboot}
 
-\title{Compute the Bootstrap Bandwidth for the nonparametric estimator
+\title{Compute the Bootstrap Bandwidth for the Nonparametric Estimator
   of the Cure Probability
 }
 
@@ -10,20 +10,19 @@
   nonparametric estimator of the conditional probability of cure.
 }
 
-\usage{probcurehboot(x, t, d, dataset, x0, bootpars =
-npcure::controlpars())
+\usage{probcurehboot(x, t, d, dataset, x0, bootpars = controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
-    covariate values. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the covariate in the data
-    frame.
+    covariate values. If \code{dataset} is a data frame, it is
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     observed times. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the observed times in the
-    data frame.
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -68,7 +67,7 @@ npcure::controlpars())
   wiggly. To counter this behavior, the selected vector of bootstrap
   bandwidths can be smoothed by computing a moving average (its order
   being set by \code{controlpars}). Then, the smoothed bandwidths are
-  located in the \code{hsmooth} component of the returned value.
+  contained in the \code{hsmooth} component of the returned value.
 }
 
 \value{An object of S3 class 'npcure'. Formally, a list of components:
@@ -123,7 +122,7 @@ vecx0 <- seq(-1.5, 1.5, by = .1)
 
 ## Computation of bootstrap local bandwidth at the values of 'vecx0'...
 #### ... with the default control parameters
-set.seed(1) ## not needed, just for reproducibility.
+set.seed(1) ## Not needed, just for reproducibility.
 hb1 <- probcurehboot(x, t, d, data, x0 = vecx0)
 
 #### ... changing the default 'bootpars' through 'controlpars()', with
@@ -135,7 +134,7 @@ hb1 <- probcurehboot(x, t, d, data, x0 = vecx0)
 #### (c) 'hsave = TRUE' (the grid bandwidths are saved), and
 #### (d) 'hsmooth = 7' (the bootstrap bandwidths are smoothed by a
 #### moving average of 7-th order)
-set.seed(1) ## not needed, just for reproducibility.
+set.seed(1) ## Not needed, just for reproducibility.
 hb2 <- probcurehboot(x, t, d, data, x0 = vecx0, bootpars =
 controlpars(B = 1999, hbound = c(.2, 4), hl = 50, hsave = TRUE, hsmooth
 = 7)) 
@@ -151,9 +150,9 @@ plot(q1$x0, q1$q, type = "l", xlab = "Covariate", ylab =
 "Cure probability", ylim = c(0,1))
 lines(q2$x0, q2$q, type = "l", lty = 2)
 lines(q2sm$x0, q2sm$q, type = "l", lty = 3)
-lines(q1$x0, 1 - exp(2*q1$x0)/(1 + exp(2*q1$x0)), lwd = 2)
+lines(q1$x0, 1 - exp(2*q1$x0)/(1 + exp(2*q1$x0)), col = 2)
 legend("topright", c("Estimate with 'hb1'", "Estimate with 'hb2'",
-"Estimate with 'hb2' smoothed", "True"), lty = c(1, 2, 3, 1), lwd = c(1,
+"Estimate with 'hb2' smoothed", "True"), lty = c(1, 2, 3, 1), col = c(1,
 1, 1, 2)) 
 
 \donttest{
@@ -171,10 +170,10 @@ q.age.smooth <- probcure(z1, t2, d3, bmt, x0 = x0, h = hb$hsmooth)
 
 ## Plot of estimated cure probability
 plot(q.age$x0, q.age$q, type = "l", ylim = c(0, 1), xlab =
-"Patient age (years)", ylab = "Estimated cure probability")
-lines(q.age.smooth$x0, q.age.smooth$q, lty = 2)
-legend("topright", c("h bootstrap", "Smoothed h bootstrap"), lty = c(1,
-2))
+"Patient age (years)", ylab = "Cure probability")
+lines(q.age.smooth$x0, q.age.smooth$q, col = 2)
+legend("topright", c("Estimate with h bootstrap",
+"Estimate with smoothed h bootstrap"), lty = 1, col = 1:2)
 }
 }
 

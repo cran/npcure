@@ -9,10 +9,12 @@ summary.npcure <- function(object, ...) {
 }
 
 ## print method
-print.npcure <- function(x, how, ...) {
+print.npcure <- function(x, how, head = FALSE, ...) {
     dots <- list(...)
     if (is.null(dots$digits))
         dots$digits <- getOption("digits")
+    if (head && is.null(dots$n)) ## nuevo para head
+        dots$n <- 6
     if (length(x$type) == 1) {
         if (!missing(how)) {
             if (how == "wide" && !is.null(x$conf))
@@ -27,6 +29,8 @@ print.npcure <- function(x, how, ...) {
             cat("global\n\n")
         if (x$type == "cure") {
             cat("Conditional", x$type, "estimate:\n")
+            if (head && length(x$x0) < dots$n)
+                head <- FALSE
             if (x$local) { ## local
                 if (is.null(x$conf)) { ## without CI
                     df <- as.data.frame(x[c("h", "x0", "q")])
@@ -36,7 +40,13 @@ print.npcure <- function(x, how, ...) {
                     df <- as.data.frame(x[c("h", "x0", "q", "conf")])
                     dimnames(df)[[2]][3:5] <- c(x$type, sprintf("lower %s%% CI", formatC(x$conflevel*100)), sprintf("upper %s%% CI", formatC(x$conflevel*100)))                
                 }
-                print(df, row.names = FALSE, digits = dots$digits)
+                if (head) {
+                    print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                    cat("...\n")
+                }
+                else {
+                    print(df, row.names = FALSE, digits = dots$digits)
+                }
             }
             else { ## cure, global
                 if (is.null(x$conf)) { ## without CI
@@ -45,7 +55,13 @@ print.npcure <- function(x, how, ...) {
                             cat("\nh =", format(x$h[i], digits = dots$digits), "\n")
                             df <- data.frame(x["x0"], x$q[i])
                             dimnames(df)[[2]][2] <- x$type
-                            print(df, row.names = FALSE, digits = dots$digits)
+                            if (head) {
+                                print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                                cat("...\n")
+                            }
+                            else {
+                                print(df, row.names = FALSE, digits = dots$digits)
+                            }
                         }
                     }
                     else { ## wide
@@ -53,7 +69,13 @@ print.npcure <- function(x, how, ...) {
                         for (i in 1:length(x$h))
                             df <- cbind(df, x$q[i])
                         dimnames(df)[[2]] <- c("x0", formatC(paste("h = ", x$h, sep = ""), getOption("digits") + 1))
-                        print(df, row.names = FALSE, digits = dots$digits)
+                        if (head) {
+                            print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                            cat("...\n")
+                        }
+                        else {
+                            print(df, row.names = FALSE, digits = dots$digits)
+                        }
                     }
                 }
                 else { ## long by default
@@ -61,7 +83,13 @@ print.npcure <- function(x, how, ...) {
                         cat("\nh =", format(x$h[i], digits = dots$digits), "\n")
                         df <- data.frame(x["x0"], x$q[i], x$conf[[i]])
                         dimnames(df)[[2]] <- c("x0", x$type, sprintf("lower %s%% CI", formatC(x$conflevel*100)), sprintf("upper %s%% CI", formatC(x$conflevel*100)))
-                        print(df, row.names = FALSE, digits = dots$digits)
+                        if (head) {
+                            print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                            cat("...\n")
+                        }
+                        else {
+                            print(df, row.names = FALSE, digits = dots$digits)
+                        }
                     }
                 }
             }
@@ -74,6 +102,8 @@ print.npcure <- function(x, how, ...) {
             else
                 cat("Beran's conditional ")
             cat(x$type, "estimate:\n")
+            if (head && length(x$testim) < dots$n)
+                head <- FALSE
             if (x$local) { ## latency or beran, local 
                 if (is.null(x$conf)) {
                     if (!missing(how) && how == "long") { ## long
@@ -85,7 +115,13 @@ print.npcure <- function(x, how, ...) {
                             else
                                 df <- data.frame(x["testim"], x$S[i])
                             dimnames(df)[[2]] <- c("time", x$type)
-                            print(df, row.names = FALSE, digits = dots$digits)
+                            if (head) { ## nuevo para head
+                                print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                                cat("...\n")
+                            }
+                            else {
+                                print(df, row.names = FALSE, digits = dots$digits)
+                            }
                         }
                     }
                     else { ## wide
@@ -94,7 +130,13 @@ print.npcure <- function(x, how, ...) {
                             df <- cbind(df, x$S[i])
                         dimnames(df)[[2]] <- c("time", formatC(paste("x0 = ", x$x0, sep = ""), getOption("digits") + 1))
                         cat("\n")
-                        print(df, row.names = FALSE, digits = dots$digits)
+                        if (head) { ## nuevo para head
+                            print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                            cat("...\n")
+                        }
+                        else {
+                            print(df, row.names = FALSE, digits = dots$digits)
+                        }
                     }
                 }
                 else { ## latency or beran, local, with CI, only long by default 
@@ -105,7 +147,13 @@ print.npcure <- function(x, how, ...) {
                         else
                             df <- data.frame(x["testim"], x$S[i], x$conf[[i]])
                         dimnames(df)[[2]] <- c("time", x$type, sprintf("lower %s%% CI", formatC(x$conflevel*100)), sprintf("upper %s%% CI", formatC(x$conflevel*100)))
-                        print(df, row.names = FALSE, digits = dots$digits)
+                        if (head) {
+                            print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                            cat("...\n")
+                        }
+                        else {
+                            print(df, row.names = FALSE, digits = dots$digits)
+                        }
                     }
                 }
             }
@@ -118,7 +166,13 @@ print.npcure <- function(x, how, ...) {
                                 cat("\nh =", format(x$h[j], digits = dots$digits), "\n")
                                 df <- data.frame(x["testim"], x$S[[j]][i])
                                 dimnames(df)[[2]] <- c("time", x$type)
-                                print(df, row.names = FALSE, digits = dots$digits)
+                                if (head) {
+                                    print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                                    cat("...\n")
+                                }
+                                else {
+                                    print(df, row.names = FALSE, digits = dots$digits)
+                                }
                             }
                         }  
                     }
@@ -129,7 +183,13 @@ print.npcure <- function(x, how, ...) {
                             for (j in 1:length(x$h))
                                 df <- cbind(df, x$S[[j]][i])
                             dimnames(df)[[2]] <- c("time", formatC(paste("h = ", x$h, sep = ""), dots$digits + 1))
-                            print(df, row.names = FALSE, digits = dots$digits)
+                            if (head) {
+                                print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                                cat("...\n")
+                            }
+                            else {
+                                print(df, row.names = FALSE, digits = dots$digits)
+                            }
                         }
                     }
                 }
@@ -141,7 +201,13 @@ print.npcure <- function(x, how, ...) {
                             df <- data.frame(x["testim"])
                             df <- cbind(df, x$S[[j]][i], x$conf[[j]][i])
                             dimnames(df)[[2]] <- c("time", x$type, sprintf("lower %s%% CI", formatC(x$conflevel*100)), sprintf("upper %s%% CI", formatC(x$conflevel*100)))
-                            print(df, row.names = FALSE, digits = dots$digits)
+                            if (head) {
+                                print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                                cat("...\n")
+                            }
+                            else {
+                                print(df, row.names = FALSE, digits = dots$digits)
+                            }
                         }
                     }
                 }
@@ -164,6 +230,8 @@ print.npcure <- function(x, how, ...) {
         }
         else { ## bandwidth
             cat(x$type[1], "(h) for", if (x$type[2] == "survival") "Beran's", x$type[2], "estimator conditional on covariate x0:\n")
+            if (head && length(x$x0) < dots$n)
+                head <- FALSE
             if (is.null(x$hsmooth)) {
                 df <- data.frame(x[c("x0", "h")])
                 dimnames(df)[[2]] <- c("x0", "h")
@@ -173,7 +241,13 @@ print.npcure <- function(x, how, ...) {
                 dimnames(df)[[2]] <- c("x0", "h", "h.smooth")
             }
             cat("\n")
-            print(df, row.names = FALSE, digits = dots$digits)
+            if (head) { ## nuevo para head
+                print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
+                cat("...\n")
+            }
+            else {
+                print(df, row.names = FALSE, digits = dots$digits)
+            }
         }
     }
 }

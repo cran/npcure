@@ -8,20 +8,19 @@
   effect on the probability of cure.
 }
 
-\usage{testcov(x, t, d, dataset, bootpars = npcure::controlpars())
+\usage{testcov(x, t, d, dataset, bootpars = controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, an object giving the covariate
-    values, whose type can be numeric, integer, factor or
-    character. If\code{dataset} is a data frame, it is interpreted as
-    thename of the variable corresponding to the covariate in the data
-    frame.
+    values, whose type can be numeric, integer, factor or character.
+    If\code{dataset} is a data frame, it is interpreted as the name of
+    the variable corresponding to the covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     observed times. If \code{dataset} is a data frame, it is
-    interpreted as the name of the variable corresponding to the observed
-    times in the data frame.
+    interpreted as the name of the variable corresponding to the
+    observed times in the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -43,24 +42,24 @@
 \details{The function computes a statistic, based on the method by
   Delgado and González-Manteiga (2004), to test whether a covariate X
   has an effect on the cure probability (\eqn{H_1}: cure probability =
-  q(x)) or not (\eqn{H_0}: cure probability = q). The procedure is
-  carried out as a significance test in nonparametric regression, since
-  the cure rate can be written as the regression function \eqn{E(\nu | X
-  = x) = q(x)}{E(nu | X = x) = q(x)}, where \eqn{\nu}{nu} is the cure
-  indicator. The challenge of the test is that the cure indicator
-  \eqn{\nu}{nu} is only partially observed due to censoring: for the
-  uncensored observations \eqn{\nu = 0}{nu = 0}, but it is unknown if a
-  censored individual will be eventually cured or not (\eqn{\nu}{nu}
-  unknown). The approach consists in expressing the cure rate as a
-  regression function with another response, not observable but
-  estimable, say \eqn{\eta}{eta}. The estimated values of
+  q(x)) or not (\eqn{H_0}: cure probability = q). Since the cure rate
+  can be written as the regression function \eqn{E(\nu | X = x) =
+  q(x)}{E(nu | X = x) = q(x)}, where \eqn{\nu}{nu} is the cure
+  indicator, the procedure is carried out as a significance test in
+  nonparametric regression. The challenge of the test is that the cure
+  indicator \eqn{\nu}{nu} is only partially observed due to censoring:
+  for the uncensored observations \eqn{\nu = 0}{nu = 0}, but it is
+  unknown if a censored individual will be eventually cured or not
+  (\eqn{\nu}{nu} unknown). The approach consists in expressing the cure
+  rate as a regression function with another response, not observable
+  but estimable, say \eqn{\eta}{eta}. The estimated values of
   \eqn{\eta}{eta} depend on suitable estimates of the conditional 
   distribution of the censoring variable and \eqn{\tau(x)}{tau(x)}, an
   unknown time beyond which a subject could be considered as cured; see
   López-Cheda (2018). For the computation of the values of
   \eqn{\eta}{eta}, the censoring distribution is estimated
-  unconditionally using Kaplan-Meier product-limit estimator. The times
-  \eqn{\tau}{tau} is estimated by the largest uncensored time.
+  unconditionally using the Kaplan-Meier product-limit estimator. The
+  time \eqn{\tau}{tau} is estimated by the largest uncensored time.
 
   The test statistic is a weighted mean of the difference between the
   observations of \eqn{\eta_i}{eta_i} and the values of the conditional
@@ -72,7 +71,7 @@
   For a qualitative covariate there is no natural way to order the values
   \eqn{x_i}. In principle, this makes impossible to compute the indicator
   function in the test statistic. The problem is solved by considering all
-  the possible combinations of the covariate values, and computing the
+  the possible combinations of the covariate values, and by computing the
   test statistic for each 'ordered' combination. \eqn{T_{n(x)}} is taken
   as the largest value of these test statistics.
   
@@ -155,12 +154,12 @@ testcov(z, t, d, data)
 ## to study the effect on the probability of cure of...
 ## ... (a) a continuous covariate (z1 = age of the patient)
 data("bmt", package = "KMsurv")
-set.seed(1)  ## not needed, just for reproducibility.
-testcov(z1, t2, d3, bmt,  bootpars = controlpars(B = 4999))
+set.seed(1) ## Not needed, just for reproducibility.
+testcov(z1, t2, d3, bmt, bootpars = controlpars(B = 4999))
 
 ## ... (b) a qualitative covariate (z3 = patient gender)
-set.seed(1)  # not needed, just for reproducibility.
-testcov(z3, t2, d3, bmt,  bootpars = controlpars(B = 4999))
+set.seed(1) ## Not needed, just for reproducibility.
+testcov(z3, t2, d3, bmt, bootpars = controlpars(B = 4999))
 }
 }
 

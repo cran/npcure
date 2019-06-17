@@ -11,7 +11,8 @@
   function.
 }
 
-\usage{hpilot(x, x0, nnfrac = 0.25)}
+\usage{hpilot(x, x0, nnfrac = 0.25)
+}
 
 \arguments{
   \item{x}{A numeric vector of observed covariate values.
@@ -87,7 +88,7 @@
 set.seed(123)
 n <- 50
 x <- runif(n, -2, 2) ## Covariate values
-y <- rweibull(n, shape = 0.5*(x + 4)) ## True lifetimes
+y <- rweibull(n, shape = .5*(x + 4)) ## True lifetimes
 c <- rexp(n) ## Censoring values
 p <- exp(2*x)/(1 + exp(2*x)) ## Probability of being susceptible
 u <- runif(n)

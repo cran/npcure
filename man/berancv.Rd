@@ -10,19 +10,19 @@
   for Beran's estimator of the conditional survival function.
 }
 
-\usage{berancv(x, t, d, dataset, x0, cvpars = npcure::controlpars())
+\usage{berancv(x, t, d, dataset, x0, cvpars = controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
-    covariate values. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the covariate in the data
-    frame.
+    covariate values. If \code{dataset} is a data frame, it is
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     observed times. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the observed times in the
-    data frame.
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -67,7 +67,7 @@
 
 \value{An object of S3 class 'npcure'. Formally, a list of components:
   \item{type}{The constant character string
-    c("Cross-validation bandwidth", "survival").
+  c("Cross-validation bandwidth", "survival").
   }
   \item{x0}{Grid of covariate values.
   }
@@ -127,17 +127,17 @@ c(.2, 4), hl = 150, hsave = TRUE))
 ## Survival estimates for covariate values 0, 1, with CV local bandwidth
 S1 <- beran(x, t, d, data, x0 = x0,  h = hcv$h)
 ## Plot predicted survival curves for covariate values 0, 1
-plot (S1$testim, S1$S$x0, type = "S", xlab = "Time", ylab = "Survival",
+plot (S1$testim, S1$S$x0, type = "s", xlab = "Time", ylab = "Survival",
 ylim = c(0, 1))
-lines(S1$testim, S1$S$x1, type = "S", lty = 2)
+lines(S1$testim, S1$S$x1, type = "s", lty = 2)
 ## The survival curves are displayed for reference
 p0 <- exp(2*x0)/(1 + exp(2*x0))
 lines(S1$testim, 1 - p0[1] + p0[1]*pweibull(S1$testim, shape = .5*(x0[1]
-+ 4), lower.tail = FALSE), lwd = 2)
++ 4), lower.tail = FALSE), col = 2)
 lines(S1$testim, 1 - p0[2] + p0[2]*pweibull(S1$testim, shape = .5*(x0[2]
-+ 4), lower.tail = FALSE), lty = 2, lwd = 2)
++ 4), lower.tail = FALSE), lty = 2, col = 2)
 legend("topright", c("Estimate, x = 0", "True, x = 0",
-"Estimate, x = 1", "True, x = 1"), lty = c(1, 1, 2, 2), lwd = 1:2)
+"Estimate, x = 1", "True, x = 1"), lty = c(1, 1, 2, 2), col = 1:2)
 
 \donttest{
 ## Example with the dataset 'bmt' of the 'KMsurv' package to study the
@@ -147,16 +147,17 @@ x0 <- c(25, 40)
 hcv <- berancv(z1, t2, d3, bmt, x0 = x0, cvpars = controlpars(hbound =
 c(.2, 4), hl = 150, hsave = TRUE))
 S <- beran(z1, t2, d3, bmt, x0 = x0, h = hcv$h, conflevel = .95)
-## Plot of predicted survival curves and confidence bands
-plot(S$testim, S$S$x25, type = "S", xlab = "Time", ylab = "Survival",
+## Plot of predicted survival curves and confidence intervals
+plot(S$testim, S$S$x25, type = "s", xlab = "Time", ylab = "Survival",
 ylim = c(0, 1))
-lines(S$testim, S$conf$x25$lower, type = "S", lty = 2)
-lines(S$testim, S$conf$x25$upper, type = "S", lty = 2)
-lines(S$testim, S$S$x40, type = "S", lty = 1, lwd = 2)
-lines(S$testim, S$conf$x40$lower, type = "S", lty = 2, lwd = 2)
-lines(S$testim, S$conf$x40$upper, type = "S", lty = 2, lwd = 2)
-legend("topright", c("25 years", "95\% CI limits", "40 years",
-"95\% CI limits"), lty = c(1, 2, 1, 2), lwd = c(1, 1, 2, 2))
+lines(S$testim, S$conf$x25$lower, type = "s", lty = 2)
+lines(S$testim, S$conf$x25$upper, type = "s", lty = 2)
+lines(S$testim, S$S$x40, type = "s", lty = 1, col = 2)
+lines(S$testim, S$conf$x40$lower, type = "s", lty = 2, col = 2)
+lines(S$testim, S$conf$x40$upper, type = "s", lty = 2, col = 2)
+legend("topright", c("Age 25: Estimate", "Age 25: 95\% CI limits",
+"Age 40: Estimate", "Age 40: 95\% CI limits"), lty = 1:2,
+col = c(1, 1, 2, 2))
 }
 }
 

@@ -11,19 +11,19 @@
 
 \usage{beran(x, t, d, dataset, x0, h, local = TRUE, testimate = NULL,
 conflevel = 0L, cvbootpars = if (conflevel == 0 && !missing(h)) NULL
-else npcure::controlpars())
+else controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
     covariate values. If \code{dataset} is a data frame, it is
-    interpreted as the name of the variable corresponding to the covariate
-    in the data frame.
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
-    observed times. If \code{dataset} is a data frame, it is
-    interpreted as the name of the variable corresponding to the observed
-    times in the data frame.
+    observed times. If \code{dataset} is a data frame, it is interpreted
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -133,16 +133,16 @@ x0 <- c(0, .5)
 S1 <- beran(x, t, d, data, x0 = x0, h = c(.3, .5, 1), local = FALSE) 
 
 ## Plot predicted survival curves for covariate value 0.5
-plot(S1$testim, S1$S$h0.3$x0.5, type = "S", xlab = "Time", ylab =
+plot(S1$testim, S1$S$h0.3$x0.5, type = "s", xlab = "Time", ylab =
 "Survival", ylim = c(0, 1)) 
-lines(S1$testim, S1$S$h0.5$x0.5, type = "S", lty = 2)
-lines(S1$testim, S1$S$h1$x0.5, type = "S", lty = 3)
+lines(S1$testim, S1$S$h0.5$x0.5, type = "s", lty = 2)
+lines(S1$testim, S1$S$h1$x0.5, type = "s", lty = 3)
 ## The true survival curve is plotted for reference
 p0 <- exp(2*x0[2])/(1 + exp(2*x0[2]))
 lines(S1$testim, 1 - p0 + p0*pweibull(S1$testim, shape = .5*(x0[2] + 4),
-lower.tail = FALSE), lwd = 2)
+lower.tail = FALSE), col = 2)
 legend("topright", c("Estimate, h = 0.3", "Estimate, h = 0.5",
-"Estimate, h = 1", "True"), lty = c(1:3, 1), lwd = c(rep(1, 3), 2))
+"Estimate, h = 1", "True"), lty = c(1:3, 1), col = c(rep(1, 3), 2))
 
 ## As before, but with estimates computed at fixed times 0.1, 0.2,...,1
 S2 <- beran(x, t, d, data, x0 = x0, h = c(.3, .5, 1), local = FALSE,
@@ -158,20 +158,20 @@ S3 <- beran(x, t, d, data, x0 = x0, h = c(.3, .5), local = TRUE)
 ## The CV bandwidth is searched in a grid of 150 bandwidths (hl = 150)
 ## between 0.2 and 2 times the standardized interquartile range
 ## of the covariate values (hbound = c(.2, 2)).
-## The 95% confidence bands are also given.
+## 95% confidence intervals are also given.
 S4 <- beran(x, t, d, data, x0 = x0, conflevel = .95, cvbootpars =
 controlpars(hl = 150, hbound = c(.2, 2))) 
      
-## Plot of predicted survival curve and confidence band for covariate
-## value 0.5 
-plot(S4$testim, S4$S$x0.5, type = "S", xlab = "Time", ylab = "Survival",
+## Plot of predicted survival curve and confidence intervals for
+## covariate value 0.5 
+plot(S4$testim, S4$S$x0.5, type = "s", xlab = "Time", ylab = "Survival",
 ylim = c(0, 1))
-lines(S4$testim, S4$conf$x0.5$lower, type = "S", lty = 2)
-lines(S4$testim, S4$conf$x0.5$upper, type = "S", lty = 2)
+lines(S4$testim, S4$conf$x0.5$lower, type = "s", lty = 2)
+lines(S4$testim, S4$conf$x0.5$upper, type = "s", lty = 2)
 lines(S4$testim, 1 - p0 + p0 * pweibull(S4$testim, shape = .5*(x0[2] +
-4), lower.tail = FALSE), lwd = 2) 
-legend("topright", c("Estimate with hCV", "95\% CI limits", "True"), lty
-= c(1, 2, 1), lwd = c(1, 1, 2))
+4), lower.tail = FALSE), col = 2) 
+legend("topright", c("Estimate with CV bandwidth", "95\% CI limits",
+"True"), lty = c(1, 2, 1), col = c(1, 1, 2))
 
 \donttest{
 ## Example with the dataset 'bmt' in the 'KMsurv' package
@@ -179,16 +179,17 @@ legend("topright", c("Estimate with hCV", "95\% CI limits", "True"), lty
 data("bmt", package = "KMsurv")
 x0 <- c(25, 40)
 S <- beran(z1, t2, d3, bmt, x0 = x0, conflevel = .95)
-## Plot of predicted survival curves and confidence bands
-plot(S$testim, S$S$x25, type = "S", xlab = "Time", ylab = "Survival",
+## Plot of predicted survival curves and confidence intervals
+plot(S$testim, S$S$x25, type = "s", xlab = "Time", ylab = "Survival",
 ylim = c(0, 1))
-lines(S$testim, S$conf$x25$lower, type = "S", lty = 2)
-lines(S$testim, S$conf$x25$upper, type = "S", lty = 2)
-lines(S$testim, S$S$x40, type = "S", lty = 1, lwd = 2)
-lines(S$testim, S$conf$x40$lower, type = "S", lty = 2, lwd = 2)
-lines(S$testim, S$conf$x40$upper, type = "S", lty = 2, lwd = 2)
-legend("topright", c("25 years", "95\% CI limits", "40 years",
-"95\% CI limits"), lty = c(1, 2, 1, 2), lwd = c(1, 1, 2, 2)) 
+lines(S$testim, S$conf$x25$lower, type = "s", lty = 2)
+lines(S$testim, S$conf$x25$upper, type = "s", lty = 2)
+lines(S$testim, S$S$x40, type = "s", lty = 1, col = 2)
+lines(S$testim, S$conf$x40$lower, type = "s", lty = 2, col = 2)
+lines(S$testim, S$conf$x40$upper, type = "s", lty = 2, col = 2)
+legend("topright", c("Age 25: Estimate", "Age 25: 95\% CI limits",
+"Age 40: Estimate", "Age 40: 95\% CI limits"), lty = 1:2,
+col = c(1, 1, 2, 2)) 
 }
 }
 

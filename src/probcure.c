@@ -139,7 +139,7 @@ SEXP probcurenp0confband(SEXP Datat,
     SEXP up = PROTECT(allocVector(REALSXP, lx));
     pup = REAL(up);
     SEXP confband = PROTECT(allocVector(VECSXP, 2));
-    for (contx = 0; contx < lx; contx++) {
+    for (contx = 0; contx < lx; contx++) { // 1. for 
       REAL(x0)[0] = px[contx];
       REAL(h0)[0] = ph[contx];
       qterm = REAL(Q)[contx];
@@ -153,8 +153,8 @@ SEXP probcurenp0confband(SEXP Datat,
 	w[i][j] = (wijp < 1.0) ?  1.0 - wijp*wijp : 0.0;
 	}
       }
-      for (contb = 0; contb < b; contb++) {
-	for (i = 0; i < nrow; i++) {
+      for (contb = 0; contb < b; contb++) { // 2. for
+	for (i = 0; i < nrow; i++) { // 3. for
 	  sumprobi = 0.0;
 	  for (j = 0; j < nrow; j++) {
 	    probi[j] = w[i][j];
@@ -169,8 +169,8 @@ SEXP probcurenp0confband(SEXP Datat,
 	  }
 	  ptbootpre[i] = pdatat[index - 1];
 	  deltaboot[i] = pdatadelta[index - 1];
-	}
-	R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+	} // end of 3. for (in i)
+	R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
 	for (i = 0; i < nrow; i++) {
 	  ptboot[i] = ptbootpre[torder[i]];
 	  pxboot[i] = pdatax[torder[i]];
@@ -180,11 +180,12 @@ SEXP probcurenp0confband(SEXP Datat,
 	mterm = REAL(probcureboot)[0];
 	m += mterm;
 	m2 += mterm*mterm;
-      }
+	UNPROTECT(1);
+      } // end of 2. for (in contb)
       sd = sqrt((m2 - m*m/b)/(b - 1));
       plow[contx] = fmax(fmin(qterm - quant*sd, 1), 0);
       pup[contx] = fmax(fmin(qterm + quant*sd, 1), 0);
-    }
+    } // end of 1. for (in contx)
     PutRNGstate();
     SET_VECTOR_ELT(confband, 0, low);
     SET_VECTOR_ELT(confband, 1, up);
@@ -193,14 +194,14 @@ SEXP probcurenp0confband(SEXP Datat,
   }
   else { // Local == FALSE
     SEXP confbandlist = PROTECT(allocVector(VECSXP, lh));
-    for (conth = 0; conth < lh; conth++) {
+    for (conth = 0; conth < lh; conth++) { // 1. for
       SEXP low = PROTECT(allocVector(REALSXP, lx));
       plow = REAL(low);
       SEXP up = PROTECT(allocVector(REALSXP, lx));
       pup = REAL(up);
       SEXP confband = PROTECT(allocVector(VECSXP, 2));
       REAL(h0)[0] = ph[conth];
-      for (contx = 0; contx < lx; contx++) {
+      for (contx = 0; contx < lx; contx++) { // 2. for
 	REAL(x0)[0] = px[contx];
 	qterm = REAL(VECTOR_ELT(Q, conth))[contx];
 	m = 0;
@@ -213,8 +214,8 @@ SEXP probcurenp0confband(SEXP Datat,
 	    w[i][j] = (wijp < 1.0) ?  1.0 - wijp*wijp : 0.0;
 	  }
 	}
-	for (contb = 0; contb < b; contb++) {
-	  for (i = 0; i < nrow; i++) {
+	for (contb = 0; contb < b; contb++) { // 3. for
+	  for (i = 0; i < nrow; i++) { // 4. for
 	    sumprobi = 0.0;
 	    for (j = 0; j < nrow; j++) {
 	      probi[j] = w[i][j];
@@ -229,8 +230,8 @@ SEXP probcurenp0confband(SEXP Datat,
 	    }
 	    ptbootpre[i] = pdatat[index - 1];
 	    deltaboot[i] = pdatadelta[index - 1];
-	  }
-	  R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+	  } // end of 4. for (in i)
+	  R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
 	  for (i = 0; i < nrow; i++) {
 	    ptboot[i] = ptbootpre[torder[i]];
 	    pxboot[i] = pdatax[torder[i]];
@@ -240,16 +241,17 @@ SEXP probcurenp0confband(SEXP Datat,
 	  mterm = REAL(probcureboot)[0];
 	  m += mterm;
 	  m2 += mterm*mterm;
-	}
+	  UNPROTECT(1);
+	} // end of 3. for (in contb)
 	sd = sqrt((m2 - m*m/b)/(b - 1));
 	plow[contx] = fmax(fmin(qterm - quant*sd, 1), 0);
 	pup[contx] = fmax(fmin(qterm + quant*sd, 1),0);
-      }
+      } // end of 2. for (in contx)
       SET_VECTOR_ELT(confband, 0, low);
       SET_VECTOR_ELT(confband, 1, up);
       SET_VECTOR_ELT(confbandlist, conth, confband);
       UNPROTECT(3);
-    }
+    } // end of 1. for (in conth)
     PutRNGstate();
     UNPROTECT(11);
     return confbandlist;

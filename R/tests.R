@@ -150,7 +150,7 @@ testcov <- function(x,
                     t,
                     d,
                     dataset,
-                    bootpars = npcure::controlpars()) {
+                    bootpars = controlpars()) {
     dfr <-
         if (missing(dataset))
             dfr <- na.omit(data.frame(x, t, d))

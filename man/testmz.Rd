@@ -2,7 +2,8 @@
 
 \alias{testmz}
 
-\title{Test of Maller-Zhou}
+\title{Test of Maller-Zhou
+}
 
 \description{This function carries out the nonparametric test of Maller and
   Zhou (1992).
@@ -14,8 +15,8 @@
 \arguments{
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     the observed times. If \code{dataset} is a data frame, it is
-    interpreted as the name of the variable corresponding to the observed
-    times in the data frame.
+    interpreted as the name of the variable corresponding to the
+    observed times in the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
@@ -48,8 +49,8 @@
     between the largest observed time \eqn{t_{n}}{t_n} and the largest
     uncensored time \eqn{t_{n}^{\star}}{t_n^*}, and \code{interval}, a
     vector giving the range between
-    \eqn{\max(0,t_{n}^{\star}-\texttt{delta})}{max(0, t_n^* - delta)} and
-    \eqn{t_{n}^{\star}}{t_n^*}.
+    \eqn{\max(0,t_{n}^{\star}-\texttt{delta})}{max(0, t_n^* - delta)}
+    and \eqn{t_{n}^{\star}}{t_n^*}.
   }
 }
 

@@ -2,17 +2,21 @@
 
 \alias{summary.npcure}
 
-\title{Summary Method pof Objects of Class 'npcure'}
+\title{Summary Method for Objects of Class 'npcure'
+}
 
-\description{This function prints a summary of a 'npcure' object.}
+\description{This function prints a summary of a 'npcure' object.
+}
 
-\usage{\method{summary}{npcure}(object, \dots)}
+\usage{\method{summary}{npcure}(object, \dots)
+}
 
 \arguments{
   \item{object}{An object of class 'npcure'.
   }
   \item{\dots}{Further optional arguments for the default method
-    (i.e. \code{summary.default}) of the \code{summary} generic function.
+    (i.e., \code{summary.default}) of the \code{summary} generic
+    function. 
   }
 }
 

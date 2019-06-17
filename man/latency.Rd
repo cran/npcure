@@ -10,19 +10,19 @@
 
 \usage{latency(x, t, d, dataset, x0, h, local = TRUE, testimate = NULL,
 conflevel = 0L, bootpars = if (conflevel == 0 && !missing(h)) NULL else
-npcure::controlpars())
+controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
-    covariate values. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the covariate in the data
-    frame.
+    covariate values. If \code{dataset} is a data frame, it is
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
     observed times. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the observed times in the
-    data frame.
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
   values of the uncensoring indicator. Censored observations must be
@@ -130,15 +130,15 @@ x0 <- .5
 ## ... (a) with global bandwidths 0.5, 1, 2.
 ## By default, estimates are computed at the time values of 't'
 S1 <- latency(x, t, d, data, x0 = x0, h = c(.5, 1, 2), local = FALSE)
-plot(S1$testim, S1$S$h0.5$x0.5, type = "S", xlab = "Time", ylab =
+plot(S1$testim, S1$S$h0.5$x0.5, type = "s", xlab = "Time", ylab =
 "Latency", ylim = c(0, 1))
-lines(S1$testim, S1$S$h1$x0.5, type = "S", lty = 2)
-lines(S1$testim, S1$S$h2$x0.5, type = "S", lty = 3)
+lines(S1$testim, S1$S$h1$x0.5, type = "s", lty = 2)
+lines(S1$testim, S1$S$h2$x0.5, type = "s", lty = 3)
 ## The true latency curve is plotted as reference
 lines(S1$testim, pweibull(S1$testim, shape = .5*(x0 + 4), lower.tail =
-FALSE), lwd = 2)
+FALSE), col = 2)
 legend("topright", c(paste("Estimate, ", c("h = 0.5", "h = 1",
-"h = 2")), "True"), lty = c(1:3, 1), lwd = c(rep(1, 3), 2))
+"h = 2")), "True"), lty = c(1:3, 1), col = c(rep(1, 3), 2))
 
 ## As before, but with estimates computed at times 0.1, 0.2,..., 1
 S2 <- latency(x, t, d, data, x0 = x0, h = c(.5, 1, 2), local = FALSE,
@@ -157,18 +157,18 @@ S4 <- latency(x, t, d, data, x0 = x0, h = b$h)
 
 ## ... (d) when the bandwidth is not specified, the bootstrap bandwidth
 #### selector given by the 'latencyhboot' function is used by default.
-#### The computation of 95% confidence bands based on 1999 bootstrap
+#### The computation of 95% confidence intervals based on 1999 bootstrap
 #### resamples is also illustrated
 S5 <- latency(x, t, d, data, x0 = x0, conflevel = .95, bootpars =
 controlpars(B = 1999))
-plot(S5$testim, S5$S$x0, type = "S", xlab = "Time", ylab = "Latency",
+plot(S5$testim, S5$S$x0, type = "s", xlab = "Time", ylab = "Latency",
 ylim = c(0, 1))
-lines(S5$testim, S5$conf$x0$lower, type = "S", lty = 2)
-lines(S5$testim, S5$conf$x0$upper, type = "S", lty = 2)
+lines(S5$testim, S5$conf$x0$lower, type = "s", lty = 2)
+lines(S5$testim, S5$conf$x0$upper, type = "s", lty = 2)
 lines(S5$testim, pweibull(S5$testim, shape = .5*(x0 + 4), lower.tail =
-FALSE), lwd = 2)
+FALSE), col = 2)
 legend("topright", c("Estimate", "95\% CI limits", "True"), lty = c(1,
-2, 1), lwd = c(1, 1, 2))
+2, 1), col = c(1, 1, 2))
 
 \donttest{
 ## Example with the dataset 'bmt' of the 'KMsurv' package
@@ -176,16 +176,17 @@ legend("topright", c("Estimate", "95\% CI limits", "True"), lty = c(1,
 data("bmt", package = "KMsurv")
 x0 <- c(25, 40)
 S <- latency(z1, t2, d3, bmt, x0 = x0, conflevel = .95)
-## Plot of predicted latency curves and confidence bands
-plot(S$testim, S$S$x25, type = "S", xlab = "Time", ylab = "Latency",
-ylim = c(0,1))
-lines(S$testim, S$conf$x25$lower, type = "S", lty = 2)
-lines(S$testim, S$conf$x25$upper, type = "S", lty = 2)
-lines(S$testim, S$S$x40, type = "S", lty = 1, lwd = 2)
-lines(S$testim, S$conf$x40$lower, type = "S", lty = 2, lwd = 2)
-lines(S$testim, S$conf$x40$upper, type = "S", lty = 2, lwd = 2)
-legend("topright", c("25 years", "95\% CI limits", "40 years",
-"95\% CI limits"), lty = c(1, 2, 1, 2), lwd = c(1, 1, 2, 2))
+## Plot of predicted latency curves and confidence intervals
+plot(S$testim, S$S$x25, type = "s", xlab = "Time (days)",
+ylab = "Latency", ylim = c(0,1))
+lines(S$testim, S$conf$x25$lower, type = "s", lty = 2)
+lines(S$testim, S$conf$x25$upper, type = "s", lty = 2)
+lines(S$testim, S$S$x40, type = "s", lty = 1, col = 2)
+lines(S$testim, S$conf$x40$lower, type = "s", lty = 2, col = 2)
+lines(S$testim, S$conf$x40$upper, type = "s", lty = 2, col = 2)
+legend("topright", c("Age 25: Estimate", "Age 25: 95\% CI limits",
+"Age 40: Estimate","Age 40: 95\% CI limits"), lty = 1:2,
+col = c(1, 1, 2, 2))
 }
 }
 

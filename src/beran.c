@@ -248,7 +248,9 @@ SEXP berannp0confband(SEXP Datat,
 	    deltaboot[i] = (yboot[i] <= cboot[i]) ? 1 : 0;
 	  }
 	} // of 3. for (in i)
-	R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+	/// pruebas para corregir warning (generaba el warning) (FUNCIONA)
+	R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
+	//R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
 	for (i = 0; i < nrow; i++) {
 	  pxboot[i] = pdatax[torder[i]];
 	  ptboot[i] = ptbootpre[torder[i]];
@@ -261,6 +263,7 @@ SEXP berannp0confband(SEXP Datat,
 	  m[i] += mterm;
 	  m2[i] += mterm*mterm;
 	}
+	UNPROTECT(1); // nuevo del warning
       } // end of 2. for (in contb)
       for (i = 0; i < nrow; i++) {
 	sd[i] = sqrt((m2[i] - m[i]*m[i]/b)/(b - 1));
@@ -358,7 +361,9 @@ SEXP berannp0confband(SEXP Datat,
 	      deltaboot[i] = (yboot[i] <= cboot[i]) ? 1 : 0;
 	    }
 	  } // end of 4. for (in i)
-	  R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
+	  // prueba warning (FUNCIONA)
+	  R_orderVector(torder, nrow, PROTECT(Rf_lang2(tbootpre, onemdatadelta)), TRUE, FALSE);
+	  //R_orderVector(torder, nrow, Rf_lang2(tbootpre, onemdatadelta), TRUE, FALSE);
 	  for (i = 0; i < nrow; i++) {
 	    pxboot[i] = pdatax[torder[i]];
 	    ptboot[i] = ptbootpre[torder[i]];
@@ -371,6 +376,7 @@ SEXP berannp0confband(SEXP Datat,
 	    m[i] += mterm;
 	    m2[i] += mterm*mterm;
 	  }
+	  UNPROTECT(1);
 	} // end of 3. for (in contb)
 	for (i = 0; i < nrow; i++) {
 	  sd[i] = sqrt((m2[i] - m[i]*m[i]/b)/(b - 1));

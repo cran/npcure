@@ -11,25 +11,24 @@
 }
 
 \usage{probcure(x, t, d, dataset, x0, h, local = TRUE, conflevel = 0L,
-bootpars = if (conflevel == 0 && !missing(h)) NULL else
-npcure::controlpars())
+bootpars = if (conflevel == 0 && !missing(h)) NULL else controlpars())
 }
 
 \arguments{
   \item{x}{If \code{dataset} is missing, a numeric object giving the
-    covariate values. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the covariatein the data
-    frame.
+    covariate values. If \code{dataset} is a data frame, it is
+    interpreted as the name of the variable corresponding to the
+    covariate in the data frame.
   }
   \item{t}{If \code{dataset} is missing, a numeric object giving the
-    observed times. If \code{dataset} is a data frame, it is interpreted
-    as the name of the variable corresponding to the observed times in the
-    data frame.
+    observed times. If \code{dataset} is a data frame, it is interpreted 
+    as the name of the variable corresponding to the observed times in
+    the data frame.
   }
   \item{d}{If \code{dataset} is missing, an integer object giving the
     values of the uncensoring indicator. Censored observations must be
-    coded as 0, uncensored ones as 1. If \code{dataset} is a data frame, it
-    is interpreted as the name of the variable corresponding to the
+    coded as 0, uncensored ones as 1. If \code{dataset} is a data frame,
+    it is interpreted as the name of the variable corresponding to the
     uncensoring indicator in the data frame.
   }
   \item{dataset}{An optional data frame in which the variables named in
@@ -77,7 +76,7 @@ npcure::controlpars())
   \item{local}{The value of the \code{local} argument.
   }
   \item{h}{The value of the \code{h} argument, unless this is missing,
-    in which case its value is that of the cross-validation bandwidth.
+    in which case its value is that of the bootstrap bandwidth.
   }
   \item{x0}{The value of the \code{x0} argument.
   }
@@ -135,27 +134,29 @@ plot(q1$x0, q1$q$h1, type = "l", xlab = "Covariate", ylab =
 "Cure probability", ylim = c(0, 1))
 lines(q1$x0, q1$q$h1.5, lty = 2)
 lines(q1$x0, q1$q$h2, lty = 3)
-lines(q1$x0, 1 - exp(2*q1$x0)/(1 + exp(2*q1$x0)), lwd = 2)
+lines(q1$x0, 1 - exp(2*q1$x0)/(1 + exp(2*q1$x0)), col = 2)
 legend("topright", c(paste("Estimate, ", c("h = 1", "h = 1.5",
-"h = 2")), "True"), lty = c(1, 2, 3, 1), lwd = c(1, 1, 1, 2))
+"h = 2")), "True"), lty = c(1, 2, 3, 1), col = c(1, 1, 1, 2))
 
 ## ... (b) with local bandwidths (default)
 #### (the vectors passed to 'x0' and 'h' must have the same length)
 q2 <- probcure(x, t, d, data, x0 = x0, h = seq(1, 2.5, along = x0)) 
 
 ## ... (c) with local bootstrap bandwidths (based on 1999 booostrap
-#### resamples). Besides, 95% confidence bands are computed  and
-####smoothed (with a 15-th order moving average)
-set.seed(1)  ## not needed, just for reproducibility.
+#### resamples). Besides, 95% confidence intervals are computed  and
+#### smoothed (with a 15-th order moving average)
+set.seed(1) ## Not needed, just for reproducibility.
 hb <- probcurehboot(x, t, d, data, x0 = x0, bootpars = controlpars(B =
-1000, hsmooth = 15))
-q3 <- probcure(x, t, d, data, x0 = x0, h = hb$h, conflevel = .95)
+1999, hsmooth = 15))
+q3 <- probcure(x, t, d, data, x0 = x0, h = hb$hsmooth, conflevel = .95,
+bootpars = controlpars(B = 1999))
 
+\donttest{
 ## ... (d) If the bandwidth is not specified, the local bootstrap
-####bandwidth is used (same result as in (c))
-set.seed(1)  ## not needed, just for reproducibility.
+#### bandwidth is used (same results as in (c))
+set.seed(1) ## Not needed, just for reproducibility.
 q4 <- probcure(x, t, d, data, x0 = x0, conflevel = .95, bootpars =
-controlpars(B = 1000, hsmooth = 15))
+controlpars(B = 1999, hsmooth = 15))
 
 #### Plot of the estimated cure probabilities evaluated at 'x0'
 #### (true cure rate displayed as reference)
@@ -163,30 +164,32 @@ plot (q4$x0, q4$q, type = "l", ylim = c(0, 1), xlab = "Covariate X",
 ylab = "Cure probability")
 lines(q4$x0, q4$conf$lower, lty = 2)
 lines(q4$x0, q4$conf$upper, lty = 2)
-lines(q4$x0, 1-exp(2 * q4$x0)/(1 + exp(2 * q4$x0)), lwd = 2)
-legend("topright", c("h bootstrap", "95\% CI limits",
-expression(paste("True ", 1-p(x)))), lty = c(1, 2, 1), lwd = c(1, 1, 2))
+lines(q4$x0, 1-exp(2 * q4$x0)/(1 + exp(2 * q4$x0)), col = 2)
+legend("topright", c("Estimate", "95\% CI limits", "True"),
+lty = c(1, 2, 1), col = c(1, 1, 2))
 
-\donttest{
 ## Example with the dataset 'bmt' in the 'KMsurv' package
 ## to study the probability of cure as a function of the age (z1).
 data("bmt", package = "KMsurv")
 x0 <- seq(quantile(bmt$z1, .05), quantile(bmt$z1, .95), length.out = 100)
 q.age <- probcure(z1, t2, d3, bmt, x0 = x0, conflevel = .95, bootpars =
-controlpars(B = 1000, hsmooth = 10)) 
+controlpars(B = 1999, hsmooth = 10)) 
 
-## Plot of estimated cure probability and confidence band
+## Plot of estimated cure probability and confidence intervals
+par(mar = c(5, 4, 4, 5) + .1)
 plot(q.age$x0, q.age$q, type = "l", ylim = c(0, 1), xlab =
-"Patient age (years)", ylab = "Estimated cure probability")
+"Patient age (years)", ylab = "Cure probability")
 lines(q.age$x0, q.age$conf$lower, lty = 2)
 lines(q.age$x0, q.age$conf$upper, lty = 2)
 ## The estimated density of age (z1) is added for reference
 par(new = TRUE)
 d.age <- density(bmt$z1)
-plot(d.age, xaxt = "n", yaxt = "n", xlab = "", ylab = "", col = "grey",
-main = "")
-legend("topright", c("Estimate", "95\% CI limits", "Age density"), lty =
-c(1, 2, 1), col = c(1, 1, "grey"))
+plot(d.age, xaxt = "n", yaxt = "n", xlab = "", ylab = "", col = 2,
+main = "", zero.line = FALSE)
+mtext("Density", side = 4, col = 2, line = 3) 
+axis(4, ylim = c(0, max(d.age$y)), col = 2, col.axis = 2)
+legend("topright", c("Estimate", "95\% CI limits", "Covariate density"),
+lty = c(1, 2, 1), col = c(1, 1, 2))
 }
 }
 

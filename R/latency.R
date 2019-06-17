@@ -8,7 +8,7 @@ latency <- function(x,
                     local = TRUE,
                     testimate = NULL,
                     conflevel = 0L,
-                    bootpars = if (conflevel == 0 && !missing(h)) NULL else npcure::controlpars()) {
+                    bootpars = if (conflevel == 0 && !missing(h)) NULL else controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))
@@ -27,9 +27,9 @@ latency <- function(x,
         sm <- bootpars$hsmooth
         h <-
             if (sm > 1)
-                npcure::latencyhboot(x, t, d, dfr, x0, bootpars)$hsmooth
+                latencyhboot(x, t, d, dfr, x0, bootpars)$hsmooth
             else
-                npcure::latencyhboot(x, t, d, dfr, x0, bootpars)$h
+                latencyhboot(x, t, d, dfr, x0, bootpars)$h
     }
     else {
         if (local) {
@@ -79,11 +79,11 @@ latency <- function(x,
         B <- bootpars$B
         fpilot <- bootpars$fpilot
         if (is.null(fpilot)) {
-            pilot <- npcure::hpilot(dfr$x, dfr$x, bootpars$nnfrac)
+            pilot <- hpilot(dfr$x, dfr$x, bootpars$nnfrac)
         }
         else
             pilot <- do.call(fpilot, c(list(x0 = dfr$x), bootpars$dots))
-        probcurepilot <- as.numeric(npcure::probcure(x, t, d, dfr, dfr$x, pilot)$q)
+        probcurepilot <- as.numeric(probcure(x, t, d, dfr, dfr$x, pilot)$q)
         band <- .Call("latencynp0confband",
                       dfr$t,
                       dfr$x,

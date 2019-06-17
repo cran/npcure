@@ -27,7 +27,7 @@ probcurehboot <- function(x,
                           d,
                           dataset,
                           x0,
-                          bootpars = npcure::controlpars()) {
+                          bootpars = controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))
@@ -48,7 +48,7 @@ probcurehboot <- function(x,
     nrow <- dim(dfr)[1]
     fpilot <- bootpars$fpilot
     if (is.null(fpilot)) {
-        pilot <- npcure::hpilot(dfr$x, x0, bootpars$nnfrac)
+        pilot <- hpilot(dfr$x, x0, bootpars$nnfrac)
     }
     else
         pilot <- do.call(fpilot, c(list(x0 = x0), bootpars$dots))
@@ -84,7 +84,7 @@ latencyhboot <- function(x,
                          d,
                          dataset,
                          x0,
-                         bootpars = npcure::controlpars()) {
+                         bootpars = controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))
@@ -106,8 +106,8 @@ latencyhboot <- function(x,
     nrow <- dim(dfr)[1]
     fpilot <- bootpars$fpilot
     if (is.null(fpilot)) {
-        pilot <- npcure::hpilot(dfr$x, dfr$x, bootpars$nnfrac)
-        pilotx0 <- npcure::hpilot(dfr$x, x0, bootpars$nnfrac)
+        pilot <- hpilot(dfr$x, dfr$x, bootpars$nnfrac)
+        pilotx0 <- hpilot(dfr$x, x0, bootpars$nnfrac)
     }
     else {
         pilot <- do.call(fpilot, c(list(x0 = dfr$x), bootpars$dots))
@@ -148,7 +148,7 @@ berancv <- function(x,
                     d,
                     dataset,
                     x0,
-                    cvpars = npcure::controlpars()) {
+                    cvpars = controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))

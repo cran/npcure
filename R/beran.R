@@ -8,7 +8,7 @@ beran <- function(x,
                   local = TRUE,
                   testimate = NULL,
                   conflevel = 0L,
-                  cvbootpars = if (conflevel == 0 && !missing(h)) NULL else npcure::controlpars()) {
+                  cvbootpars = if (conflevel == 0 && !missing(h)) NULL else controlpars()) {
     dfr <-
         if (missing(dataset))
             na.omit(data.frame(x, t, d))
@@ -26,9 +26,9 @@ beran <- function(x,
         sm <- cvbootpars$hsmooth
         h <-
             if (sm > 1)
-                npcure::berancv(x, t, d, dfr, x0, cvbootpars)$hsmooth
+                berancv(x, t, d, dfr, x0, cvbootpars)$hsmooth
             else
-                npcure::berancv(x, t, d, dfr, x0, cvbootpars)$h
+                berancv(x, t, d, dfr, x0, cvbootpars)$h
     }
     else {
         if (local) {
@@ -78,11 +78,11 @@ beran <- function(x,
         B <- cvbootpars$B
         fpilot <- cvbootpars$fpilot
         if (is.null(fpilot)) {
-            pilot <- npcure::hpilot(dfr$x, dfr$x, cvbootpars$nnfrac)
+            pilot <- hpilot(dfr$x, dfr$x, cvbootpars$nnfrac)
         }
         else
             pilot <- do.call(fpilot, c(list(x0 = dfr$x), cvbootpars$dots))
-        probcurepilot <- as.numeric(npcure::probcure(x, t, d, dfr, dfr$x, pilot)$q)
+        probcurepilot <- as.numeric(probcure(x, t, d, dfr, dfr$x, pilot)$q)
         band <- .Call("berannp0confband",
                       dfr$t,
                       dfr$x,
