@@ -18,7 +18,10 @@ inline static double probcurenp0core(double *pdatax,
       temp *= 1.0 - Bx[i]/sumBx;
     sumBx -= Bx[i];
   }
-  return fabs(temp);
+  // very small values are set to 0
+  if (temp < 1e-10)
+    temp = 0.0;
+  return temp;
 }
 
 // NP estimator of the conditional probability of cure
@@ -50,7 +53,7 @@ SEXP probcurenp0(SEXP Datat,
     return result;
   }
   else { // else of 1st if-else: global bandwidths
-    if (lx == 1) { // 2nd if-else
+    if (lx == 1) { // 2nd if-else; in this case, for efficiency, the inline function is not called
       SEXP result = PROTECT(allocVector(REALSXP, lh));
       presult = REAL(result);
       x = px[0];
@@ -66,7 +69,10 @@ SEXP probcurenp0(SEXP Datat,
 	    temp *= 1.0 - Bx[j]/sumBx;
 	  sumBx -= Bx[j];
 	}
-	presult[conth] = fabs(temp);
+	// very small values are set to 0
+	if (temp < 1e-10)
+	  temp = 0.0;
+	presult[conth] = temp;
 	sumBx = 0.0;
 	temp = 1.0;
       }

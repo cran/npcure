@@ -1,6 +1,6 @@
 Package: npcure
-Version: 0.1-4
-Date: 2019-06-15
+Version: 0.1-5
+Date: 2020-02-28
 Title: Nonparametric Estimation in Mixture Cure Models
 Authors@R: c(person("Ignacio", "López-de-Ullibarri", role = c("aut", "cre"), email = "ignacio.lopezdeullibarri@udc.es"), person("Ana", "López-Cheda", role = "aut", email = "ana.lopez.cheda@udc.es"), person("Maria Amalia", "Jácome", role = "aut", email = "majacome@udc.es"))
 Author: Ignacio López-de-Ullibarri [aut, cre],
@@ -14,6 +14,6 @@ License: GPL (>= 2)
 Imports: permute, stats, utils, zoo
 NeedsCompilation: yes
 Encoding: UTF-8
-Packaged: 2019-06-16 10:22:45 UTC; ilu
+Packaged: 2020-02-28 17:11:35 UTC; ilu
 Repository: CRAN
-Date/Publication: 2019-06-17 09:10:03 UTC
+Date/Publication: 2020-02-29 10:10:02 UTC

@@ -22,11 +22,14 @@ inline static void latencynp0core(double *pdatax,
   for (i = 0; i < nrow; i++) {
     if (sumBx > 0 && pdatadelta[i] == 1)
       temp *= 1.0 - Bx[i]/sumBx;
+    // very small values are set to 0
+    if (temp < 1e-10)
+      temp = 0.0;
     pberan[i] = temp;
     sumBx -= Bx[i];
   }
   for (i = 0; i < nrow; i++)
-    ps[i] =  (temp == 1.0) ? 0.0 : (pberan[i] - temp)/(1.0 - temp);
+    ps[i] = (1.0 - temp < 1e-10) ? 0.0 : (pberan[i] - temp)/(1.0 - temp);
   if (testim) {
     lasti = 0;
     for (j = 0; j < lt; j++) {
@@ -34,7 +37,7 @@ inline static void latencynp0core(double *pdatax,
       i = lasti;
       while (!found && i < nrow) {
 	if (ppt[j] < pdatat[i]) {
-	  presult[j] = (i == 0) ? 1 : ps[i - 1];
+	  presult[j] = (i == 0) ? 1.0 : ps[i - 1];
 	  found = true;
 	  lasti = i;
 	}
@@ -107,11 +110,14 @@ SEXP latencynp0(SEXP Datat,
 	for (j = 0; j < nrow; j++) {
 	  if (sumBx > 0 && pdatadelta[j] == 1)
 	    temp *= 1.0 - Bx[j]/sumBx;
+	  // very small values are set to 0
+	  if (temp < 1e-10)
+	    temp = 0.0;
 	  pberan[j] = temp;
 	  sumBx -= Bx[j];
 	}
 	for (j = 0; j < nrow; j++)
-	  ps[j] = (temp == 1.0) ? 0.0 : (pberan[j] - temp)/(1.0 - temp);
+	  ps[j] = (1.0 - temp < 1e-10) ? 0.0 : (pberan[j] - temp)/(1.0 - temp);
 	if (testim) {
 	  lastj = 0;
 	  for (k = 0; k < lt; k++) {
@@ -119,7 +125,7 @@ SEXP latencynp0(SEXP Datat,
 	    j = lastj;
 	    while (!found && j < nrow) {
 	      if (ppt[k] < pdatat[j]) {
-		presult[k] = (j == 0) ? 1 : ps[j - 1];
+		presult[k] = (j == 0) ? 1.0 : ps[j - 1];
 		found = true;
 		lastj = j;
 	      }

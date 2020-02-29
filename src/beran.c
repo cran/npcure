@@ -22,6 +22,9 @@ inline static void berancore(double *pdatax,
   for (i = 0; i < nrow; i++) {
     if (sumBx > 0 && pdatadelta[i] == 1)
       temp *= 1.0 - Bx[i]/sumBx;
+    // very small values are set to 0
+    if (temp < 1e-10)
+      temp = 0.0;
     pberan[i] = temp;
     sumBx -= Bx[i];
   }
@@ -32,7 +35,7 @@ inline static void berancore(double *pdatax,
       i = lasti;
       while (!found && i < nrow) {
 	if (ppt[j] < pdatat[i]) {
-	  presult[j] = (i == 0) ? 1 : pberan[i - 1];
+	  presult[j] = (i == 0) ? 1.0 : pberan[i - 1];
 	  found = true;
 	  lasti = i;
 	}
@@ -177,7 +180,7 @@ SEXP berannp0confband(SEXP Datat,
       Bx[j] = (xgij < 1.0) ? 1.0 - xgij*xgij : 0.0;
       sumBx += Bx[j];
     }
-    temp1 = 1;
+    temp1 = 1.0;
     for (j = 0; j < nrow; j++) {
       temp0 = temp1;
       if (sumBx > 0 && pdatadelta[j] == 1)

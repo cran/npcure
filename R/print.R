@@ -13,7 +13,7 @@ print.npcure <- function(x, how, head = FALSE, ...) {
     dots <- list(...)
     if (is.null(dots$digits))
         dots$digits <- getOption("digits")
-    if (head && is.null(dots$n)) ## nuevo para head
+    if (head && is.null(dots$n))
         dots$n <- 6
     if (length(x$type) == 1) {
         if (!missing(how)) {
@@ -115,7 +115,7 @@ print.npcure <- function(x, how, head = FALSE, ...) {
                             else
                                 df <- data.frame(x["testim"], x$S[i])
                             dimnames(df)[[2]] <- c("time", x$type)
-                            if (head) { ## nuevo para head
+                            if (head) {
                                 print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
                                 cat("...\n")
                             }
@@ -130,7 +130,7 @@ print.npcure <- function(x, how, head = FALSE, ...) {
                             df <- cbind(df, x$S[i])
                         dimnames(df)[[2]] <- c("time", formatC(paste("x0 = ", x$x0, sep = ""), getOption("digits") + 1))
                         cat("\n")
-                        if (head) { ## nuevo para head
+                        if (head) {
                             print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
                             cat("...\n")
                         }
@@ -241,7 +241,7 @@ print.npcure <- function(x, how, head = FALSE, ...) {
                 dimnames(df)[[2]] <- c("x0", "h", "h.smooth")
             }
             cat("\n")
-            if (head) { ## nuevo para head
+            if (head) {
                 print(df[1:dots$n, ], row.names = FALSE, digits = dots$digits)
                 cat("...\n")
             }

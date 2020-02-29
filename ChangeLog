@@ -1,3 +1,9 @@
+Changes in version 0.1-5
+
+	2020/02/28 Ignacio López-de-Ullibarri <ignacio.lopezdeullibarri@udc.es>
+
+	* scr: in 'berancore', 'latencynp0core', 'latencynp0', 'probcurenp0core' and 'probcurenp0' very small values of 'temp' are set to 0; in 'latencynp0core' and 'latencynp0' the equality comparison 'temp == 1.0' is substituted with '1.0 - temp < 1e-10'; these changes are to avoid the following problem detected by a referee, which we have been unable to reproduce in Linux and Windows: 0's are printed as very small negative numbers (the differences being smaller than any reasonable tolerance); also, in 'latencynp0core', 'latencynp0' and 'berancore', when assigning values to double variables, '1's have been substituted by '1.0' (for consistency, since it must not have any consequences).
+
 Changes in version 0.1-4
 
 	2019/06/15 Ignacio López-de-Ullibarri <ignacio.lopezdeullibarri@udc.es>
